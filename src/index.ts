@@ -4,6 +4,8 @@ import express, { Application } from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import authRoutes from './routes/auth';
+import clientRoutes from './routes/clients';
+import taskRoutes from './routes/tasks';
 
 dotenv.config();
 
@@ -13,6 +15,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
+app.use('/api/clients', clientRoutes);
+app.use('/api/tasks', taskRoutes);
 
 app.get('/', (req, res) => {
   res.send('Freelance Tracker API is running.');
