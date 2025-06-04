@@ -6,6 +6,9 @@ import cors from 'cors';
 import authRoutes from './routes/auth';
 import clientRoutes from './routes/clients';
 import taskRoutes from './routes/tasks';
+import timeEntriesRouter from './routes/timeEntries';
+import invoicesRouter from './routes/invoices';
+import reportsRouter from './routes/reports';
 
 dotenv.config();
 
@@ -17,6 +20,9 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/clients', clientRoutes);
 app.use('/api/tasks', taskRoutes);
+app.use('/api/time-entries', timeEntriesRouter);
+app.use('/api/invoices', invoicesRouter);
+app.use('/api/reports', reportsRouter);
 
 app.get('/', (req, res) => {
   res.send('Freelance Tracker API is running.');
