@@ -26,10 +26,18 @@ export const getTasks = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+// Create a new task
 export const createTask = async (req: Request, res: Response): Promise<void> => {
   const userId = (req as AuthRequest).userId;
   try {
-    const { clientId, name, description, status, hourlyRate } = req.body;
+    const { clientId, name, description, status, hourlyRate, dueDate } = req.body;
+    // If dueDate is missing or null, set to today (local time)
+    let finalDueDate = dueDate;
+    if (!finalDueDate) {
+      const now = new Date();
+      now.setHours(0, 0, 0, 0);
+      finalDueDate = now;
+    }
     const task = new Task({
       userId,
       clientId,
@@ -37,6 +45,7 @@ export const createTask = async (req: Request, res: Response): Promise<void> => 
       description,
       status,
       hourlyRate,
+      dueDate: finalDueDate,
     });
     await task.save();
     res.status(201).json(task);
@@ -60,12 +69,23 @@ export const getTask = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+// Update an existing task
 export const updateTask = async (req: Request, res: Response): Promise<void> => {
   const userId = (req as AuthRequest).userId;
   try {
+    const { name, description, status, hourlyRate, dueDate } = req.body;
+    // If dueDate is missing or null, set to today (local time)
+    let finalDueDate = dueDate;
+    if (finalDueDate === undefined || finalDueDate === null) {
+      const now = new Date();
+      now.setHours(0, 0, 0, 0);
+      finalDueDate = now;
+    }
+    const update: any = { name, description, status, hourlyRate };
+    if (finalDueDate) update.dueDate = finalDueDate;
     const task = await Task.findOneAndUpdate(
       { _id: req.params.id, userId },
-      req.body,
+      update,
       { new: true }
     );
     if (!task) {

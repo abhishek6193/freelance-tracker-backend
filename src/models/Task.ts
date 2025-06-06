@@ -7,6 +7,7 @@ export interface ITask extends Document {
   description?: string;
   status: 'active' | 'completed' | 'archived';
   hourlyRate?: number;
+  dueDate?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -18,6 +19,7 @@ const TaskSchema = new Schema<ITask>({
   description: { type: String },
   status: { type: String, enum: ['active', 'completed', 'archived'], default: 'active' },
   hourlyRate: { type: Number },
+  dueDate: { type: Date },
 }, { timestamps: true });
 
 export default mongoose.model<ITask>('Task', TaskSchema);
